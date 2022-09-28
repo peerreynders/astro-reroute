@@ -65,7 +65,7 @@ export type PostPath = ReturnType<typeof toStaticPath>;
 
 const toInfo = ({ props: { info } }: PostPath) => info;
 
-type Info = ReturnType<typeof toInfo>;
+export type Info = ReturnType<typeof toInfo>;
 
 function byPubDateDesc(a: Info, b: Info): number {
   return b.pubDate.valueOf() - a.pubDate.valueOf();
