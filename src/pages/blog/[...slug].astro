@@ -3,11 +3,9 @@ import { toStaticPath } from './blog-routing';
 import type { Post } from './blog-routing'; 
 
 export async function getStaticPaths() {
-  const posts = await Astro.glob<Post>('../_blog/*.{md,mdx}');
-  return posts.map(toStaticPath);
+  return (await Astro.glob<Post>('../_blog/*.{md,mdx}')).map(toStaticPath);
 }
 
-const { post } = Astro.props;
-const { Content } = post;
+const { Content } = Astro.props.post;
 ---
 <Content />

@@ -44,22 +44,36 @@ function toStaticPath(post: Post) {
     prefix === undefined
       ? [filename, post.frontmatter.pubDate, new Date(post.frontmatter.pubDate)]
       : [`${prefix.year}/${prefix.month}/${name}`, prefix.full, prefix.date];
-  const url = `/blog/${slug}`;
-  const title = post.frontmatter.title;
+
+  const info = {
+    title: post.frontmatter.title,
+    url: `/blog/${slug}`,
+    pubFull,
+    pubDate,
+  };
 
   return {
     params: { slug },
     props: {
       post,
-      title,
-      pubFull,
-      pubDate,
-      url,
+      info
     },
   };
 }
 
 export type PostPath = ReturnType<typeof toStaticPath>;
 
-export { toStaticPath };
+const toInfo = ({ props: { info } }: PostPath) => info;
 
+type Info = ReturnType<typeof toInfo>;
+
+function byPubDateDesc(a: Info, b: Info): number {
+  return b.pubDate.valueOf() - a.pubDate.valueOf();
+}
+
+async function toPostInfo(postPaths: Promise<PostPath[]>) {
+  const paths = await postPaths;
+  return paths.map(toInfo).sort(byPubDateDesc);
+}
+
+export { toStaticPath, toPostInfo };
