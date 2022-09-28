@@ -8,12 +8,14 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint:types": "tsc -p ./tsconfig.lint.json"
   },
   "dependencies": {
-    "astro": "^1.3.1",
     "@astrojs/mdx": "^0.11.2",
     "@astrojs/rss": "^1.0.1",
-    "@astrojs/sitemap": "^1.0.0"
+    "@astrojs/sitemap": "^1.0.0",
+    "astro": "^1.3.1",
+    "preact": "^10.11.0"
   }
 }

@@ -5,12 +5,9 @@ import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../config';
 
 import { getStaticPaths } from './blog/[...slug].astro';
+import { toPostInfo } from './post-info'; 
 
-const posts = (await getStaticPaths())
-  .map(({ props }) => props)
-  .sort(
-    (a, b) => new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf()
-  );
+const posts = await toPostInfo(getStaticPaths());
 ---
 
 <!DOCTYPE html>
@@ -42,8 +39,8 @@ const posts = (await getStaticPaths())
 				<ul>
 					{posts.map((post) => (
 						<li>
-							<time datetime={post.pubDate}>
-								{new Date(post.pubDate).toLocaleDateString('en-us', {
+							<time datetime={post.pubFull}>
+								{post.pubDate.toLocaleDateString('en-us', {
 									year: 'numeric',
 									month: 'short',
 									day: 'numeric',

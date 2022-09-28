@@ -1,52 +1,13 @@
 ---
-import { basename, extname } from 'node:path';
+import { toStaticPath } from './blog-routing';
+import type { Post } from './blog-routing'; 
 
 export async function getStaticPaths() {
-  const withDatePattern = /^(\d{4})-(\d{2})-(\d{2})-(.*)$/;
-  
-  const destructureName = (filename) => {
-    const found = withDatePattern.exec(filename);
-    if (found === null) return { name: filename };
-
-    const [, year, month, day, name] = found;
-    const date = new Date(Number(year), Number(month) - 1, Number(day));
-    return date.toString() === 'Invalid Date'
-      ? { name: filename }
-      : {
-          name,
-          year,
-          month,
-          day,
-          date,
-        };
-  };
-
-  const posts = await Astro.glob('../_blog/*.{md,mdx}');
-
-  return posts.map((post) => {
-    const filename = basename(post.file, extname(post.file));
-    const { name, year, month, date } = destructureName(filename);
-    const [slug, pubDate] =
-      date === undefined
-        ? [filename, post.frontmatter.pubDate]
-        : [`${year}/${month}/${name}`, date];
-    const url = `/blog/${slug}`;
-    const title = post.frontmatter.title;
-
-    return {
-      params: { slug },
-      props: {
-        post,
-        title,
-        pubDate,
-        url,
-      },
-    };
-  });
+  const posts = await Astro.glob<Post>('../_blog/*.{md,mdx}');
+  return posts.map(toStaticPath);
 }
 
 const { post } = Astro.props;
 const { Content } = post;
-
 ---
 <Content />
